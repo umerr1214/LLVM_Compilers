@@ -23,19 +23,15 @@
 
 "printd"				{debugFlex(tok_printd); return tok_printd;}
 "prints"				{debugFlex(tok_prints); return tok_prints;}
-[a-zA-Z][a-zA-Z0-9_]*			{debugFlex(tok_identifier); yylval.identifier=strdup(yytext); return tok_identifier;}
-[0-9]+(\.[0-9]+)?			{debugFlex(tok_double_literal); yylval.double_literal=atof(yytext); return tok_double_literal;}
+"if"       				{ debugFlex(tok_if); return tok_if; }
+"else"      			{ debugFlex(tok_else); return tok_else; }
+"{"         			{ debugFlex('{'); return '{'; }
+"}"         			{ debugFlex('}'); return '}'; }
+[a-zA-Z][a-zA-Z0-9_]*	{debugFlex(tok_identifier); yylval.identifier=strdup(yytext); return tok_identifier;}
+[0-9]+(\.[0-9]+)?		{debugFlex(tok_double_literal); yylval.double_literal=atof(yytext); return tok_double_literal;}
 \"[^"]*\"				{debugFlex(tok_string_literal); yylval.string_literal=strdup(yytext); return tok_string_literal;}
 \/\/.*					{;}
 [ \n\r\t]				{;}
 "+"|"-"|"*"|"\/"|"="|";"|"("|")"	{debugFlex(yytext[0]); return yytext[0];} 
 .					{debugFlex(-1); yyerror("this is a illegal lexeme"); exit(EXIT_FAILURE);}
 %%
-
-
-
-
-
-
-
-

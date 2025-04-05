@@ -14,7 +14,15 @@ prints("d =12+9=");
 printd(d);
 
 e = b*a/(b-3);
-prints("e= b*d/(b-3)=");
+prints("e= b*a/(b-3)=");
 prints("The value of e =");
 
 printd(e);
+
+x = 10;
+if (x) {
+  prints("true block");
+  printd(x);
+} else {
+  prints("x was zero");
+}

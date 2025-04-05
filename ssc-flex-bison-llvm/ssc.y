@@ -30,6 +30,8 @@
 %token <identifier> tok_identifier
 %token <double_literal> tok_double_literal
 %token <string_literal> tok_string_literal
+%token tok_if tok_else
+
 
 %type <value> term expression
 
@@ -42,10 +44,15 @@
 %%
 
 root:	/* empty */				{debugBison(1); addReturnInstr();}  	
-	| prints  root				{debugBison(2);}
-	| printd  root				{debugBison(3);}
-	| assignment  root			{debugBison(4);}
+	| statement root			{debugBison(2);}
 	; 
+
+statement:
+      prints
+    | printd
+    | assignment
+    | if_statement
+    ;
 
 prints:	tok_prints '(' tok_string_literal ')' ';'   {debugBison(5); printString($3); } 
 	;
@@ -66,8 +73,15 @@ expression: term				{debugBison(10); $$= $1;}
 	   | expression '/' expression		{debugBison(13); $$=performBinaryOperation($1, $3, '/');}
 	   | expression '*' expression		{debugBison(14); $$=performBinaryOperation($1, $3, '*');}
 	   | '(' expression ')'			{debugBison(15); $$= $2;}
-	   ;	   
-	      
+	   ;
+
+if_statement:
+    tok_if '(' expression ')' '{' root '}' tok_else '{' root '}' 
+	{
+        debugBison(20);
+        createIfElse($3, NULL, NULL); // $3 = condition, $6 = then-block, $10 = else-block
+    }
+    ;    
 	   
 
 %%

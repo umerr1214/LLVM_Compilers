@@ -21,6 +21,7 @@ static void initLLVM();
 void printLLVMIR();
 void addReturnInstr();
 Value* createDoubleConstant(double val);
+void createIfElse(Value* condition, void* thenBlock, void* elseBlock);
 
 
 
@@ -124,3 +125,35 @@ void yyerror(const char *err) {
 	fprintf(stderr, "\n%s\n", err);
 }
 
+void createIfElse(Value* condition, void* thenRoot, void* elseRoot) {
+    Function *func = builder.GetInsertBlock()->getParent();
+
+    // Convert condition to bool
+    Value *cond = builder.CreateFCmpONE(condition, ConstantFP::get(context, APFloat(0.0)), "ifcond");
+
+    BasicBlock *thenBB = BasicBlock::Create(context, "then", func);
+    BasicBlock *elseBB = BasicBlock::Create(context, "else");
+    BasicBlock *mergeBB = BasicBlock::Create(context, "ifcont");
+
+    builder.CreateCondBr(cond, thenBB, elseBB);
+
+    // Emit then block
+    builder.SetInsertPoint(thenBB);
+    // NOTE: root in Bison already builds statements, so we don't need to do much here.
+    // After building, add branch to merge
+    builder.CreateBr(mergeBB);
+    thenBB = builder.GetInsertBlock();
+
+    // Emit else block
+    func->getBasicBlockList().push_back(elseBB);
+    builder.SetInsertPoint(elseBB);
+    if (elseRoot != nullptr) {
+        // else statements were already parsed and generated
+    }
+    builder.CreateBr(mergeBB);
+    elseBB = builder.GetInsertBlock();
+
+    // Emit merge block
+    func->getBasicBlockList().push_back(mergeBB);
+    builder.SetInsertPoint(mergeBB);
+}
