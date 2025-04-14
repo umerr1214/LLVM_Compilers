@@ -110,14 +110,16 @@ void printDouble(Value *value) {
 }
 
 Value* performBinaryOperation(Value* lhs, Value* rhs, int op) {
-
-	switch (op) {
-		case '+': return builder.CreateFAdd(lhs, rhs, "fadd");
-		case '-': return builder.CreateFSub(lhs, rhs, "fsub");
-		case '*': return builder.CreateFMul(lhs, rhs, "fmul");
-		case '/': return builder.CreateFDiv(lhs, rhs, "fdiv");
-		default: yyerror("illegal binary operation"); exit(EXIT_FAILURE);
-	}
+    switch (op) {
+        case '+': return builder.CreateFAdd(lhs, rhs, "fadd");
+        case '-': return builder.CreateFSub(lhs, rhs, "fsub");
+        case '*': return builder.CreateFMul(lhs, rhs, "fmul");
+        case '/': return builder.CreateFDiv(lhs, rhs, "fdiv");
+        case '>': return builder.CreateFCmpUGT(lhs, rhs, "cmpgt");
+        case '<': return builder.CreateFCmpULT(lhs, rhs, "cmplt");
+        //case '==': return builder.CreateFCmpUEQ(lhs, rhs, "cmpeq");
+        default: yyerror("illegal binary operation"); exit(EXIT_FAILURE);
+    }
 }
 
 void yyerror(const char *err) {

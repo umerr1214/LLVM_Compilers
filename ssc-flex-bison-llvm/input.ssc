@@ -18,3 +18,13 @@ prints("e= b*d/(b-3)=");
 prints("The value of e =");
 
 printd(e);
+
+y = 8;
+if (y > 5) 
+{
+    prints("y is greater than 5");
+} 
+else 
+{
+    prints("y is not greater than 5");
+}
